@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    
+    <div id="cake" class="container">
+        <span class="title">Cake builder v1.0</span>
+        <hr>
+        <button class="add-button" @click="addLayer">Добавить слой</button>
+        <hr>
+
+        <div class="cake">
+
+            <div class="cakeLayers">
+                <template v-for="(layer, index) in layers">
+                    <div 
+                        oncontextmenu='return false' 
+                        @mousedown.right="sizeDown(index)" 
+                        @click="sizeUp(index)" 
+                        v-if="layer.type == 'Бисквит'" 
+                        class="cakeLayer" 
+                        :style="{background: 'tan', height: layer.height*10+'px'}">
+                    </div>
+                    <div 
+                        oncontextmenu='return false' 
+                        @mousedown.right="sizeDown(index)" 
+                        @click="sizeUp(index)" 
+                        v-else-if="layer.type == 'Малиновый'" 
+                        class="cakeLayer" 
+                        :style="{background: 'darkred', height: layer.height*10+'px'}">
+                    </div>
+                    <div 
+                        oncontextmenu='return false' 
+                        @mousedown.right="sizeDown(index)" 
+                        @click="sizeUp(index)" 
+                        v-else-if="layer.type == 'Творожный'" 
+                        class="cakeLayer" 
+                        :style="{background: 'khaki', height: layer.height*10+'px'}">
+                    </div>
+                    <div 
+                        oncontextmenu='return false' 
+                        @mousedown.right="sizeDown(index)" 
+                        @click="sizeUp(index)" 
+                        v-else-if="layer.type == 'Шоколадный'" 
+                        class="cakeLayer" 
+                        :style="{background: 'sienna', height: layer.height*10+'px'}">
+                    </div>
+                </template>
+            </div>
+
+            <div class="calculate">
+                <table width="100%" class="compos">
+                    <thead>
+                        <th class="compos" width="40%" align="left">Тип слоя</th>
+                        <th class="compos" width="55%" align="left">Высота</th>
+                        <th class="compos" width="5%" align="left"></th>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(layer, index) in layers">
+                            <th class="compos" align="left">
+                                <select v-model="layer.type">
+                                    <option>Бисквит</option>
+                                    <option>Малиновый</option>
+                                    <option>Творожный</option>
+                                    <option>Шоколадный</option>
+                                </select></th> 
+                            <th class="compos" align="left">
+                                <input v-model="layer.height"></input>
+                            </th>
+                            <th class="compos">
+                                <button @click="deleteLayer(index)" :style="{background: 'red'}">x</button>
+                            </th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <hr>
+        
+        <div class="summ">
+            {{getPrice()}} руб.
+        </div>
+
+    </div>
+   
+    <script type="text/javascript">
+        new Vue({
+            el: '#cake',
+            data: {
+            price: 0,
+            layersPrice: {
+                'Бисквит': 50,
+                'Малиновый': 120,
+                'Творожный': 60,
+                'Шоколадный': 100
+            },
+               layers: []
+            },
+            methods: {
+                addLayer() {
+                    this.layers.push({type: 'Бисквит', height: 4});
+                },
+                deleteLayer(index) {
+                    this.layers.splice(index, 1);
+                },
+                sizeUp(index) {
+                    this.layers[index].height++;
+                },
+                sizeDown(index) {
+                    if(this.layers[index].height > 1){
+                        this.layers[index].height--;
+                    }
+                },
+                getPrice() {
+                    let price = 0
+                    for(let i = 0; i < this.layers.length; i++){
+                        price += this.layers[i].height * this.layersPrice[this.layers[i].type];
+                    }
+                    return price;
+                }
+            }
+        })
+    </script>
+</body>
+</html>
